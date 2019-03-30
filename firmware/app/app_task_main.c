@@ -71,6 +71,18 @@ extern void app_task_main ( uint8_t task_id, uint8_t event_id )
             app_event_main_app_exception();
         }
         break;
+
+        case TASK_EVT_APP_MAIN_WATER_STATE_UPD:
+        {
+            app_event_main_water_state_update();
+        }
+        break;
+
+        case TASK_EVT_APP_MAIN_NO_WATER_TIMEOUT:
+        {
+            app_event_main_no_water_timeout();
+        }
+        break;
         
         case TASK_EVT_APP_MAIN_IDLE:
         {

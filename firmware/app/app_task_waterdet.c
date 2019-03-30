@@ -62,17 +62,14 @@ extern void app_task_waterdet ( uint8_t task_id, uint8_t event_id )
     {
         case TASK_EVT_APP_WATERDET_UPDATE:
         {
-            if( water_index_iir )
-                water_index_iir = WATER_INDEX_IIR( water_index_iir, app_info.adc_value );     //IIR calc
-            else
-                water_index_iir = app_info.adc_value;                                         //init IIR filter
-
             if( water_index_iir_cnt < WATER_INDEX_IIR_CNT )                                     //at least proceed WATER_INDEX_IIR_CNT times of IIR calculation
             {
+                water_index_iir = water_index_iir ? WATER_INDEX_IIR_WEAK( water_index_iir, app_info.adc_value ) : app_info.adc_value;     //IIR calc
                 water_index_iir_cnt++;
             }
             else
             {
+                water_index_iir = WATER_INDEX_IIR( water_index_iir, app_info.adc_value );     //IIR calc
                 if( water_index_iir > iir_max )
                     iir_max = water_index_iir;
                 if( water_index_iir < iir_min )
@@ -81,9 +78,16 @@ extern void app_task_waterdet ( uint8_t task_id, uint8_t event_id )
                 if( water_index_iir < WATER_INDEX_NO_WATER_LO_THRESHOLD
                   ||water_index_iir > WATER_INDEX_NO_WATER_HI_THRESHOLD )                          //if water_index_iir is too small, no water
                 {
-                    hal_mist_off();
-                    hal_fan_off();
-                    app_info.sys_state = SYS_STATE_NO_WATER;
+                    app_info.water_state = WATER_STATE_NONE;
+                    osal_event_set( TASK_ID_APP_MAIN, TASK_EVT_APP_MAIN_WATER_STATE_UPD );
+                }
+                else
+                {
+                    if( app_info.water_state != WATER_STATE_EXIST )
+                    {
+                        app_info.water_state = WATER_STATE_EXIST;
+                        osal_event_set( TASK_ID_APP_MAIN, TASK_EVT_APP_MAIN_WATER_STATE_UPD );
+                    }
                 }
             }
         }

@@ -31,10 +31,11 @@
 #define APP_WATERDET_EN                 1
 
 #if APP_WATERDET_EN > 0
-#define WATER_INDEX_IIR(old_idx, new_idx)    (uint16_t)(((uint32_t)old_idx*3+(uint32_t)new_idx)>>2)
-#define WATER_INDEX_IIR_CNT                  5
-#define WATER_INDEX_NO_WATER_HI_THRESHOLD    2300
-#define WATER_INDEX_NO_WATER_LO_THRESHOLD    1000
+#define WATER_INDEX_IIR_WEAK(old, new)      (uint16_t)(((uint32_t)old*15+(uint32_t)new)>>4)
+#define WATER_INDEX_IIR(old, new)           (uint16_t)(((uint32_t)old*63+(uint32_t)new)>>6)
+#define WATER_INDEX_IIR_CNT                  20
+#define WATER_INDEX_NO_WATER_HI_THRESHOLD    350
+#define WATER_INDEX_NO_WATER_LO_THRESHOLD    50
 #endif
 
 

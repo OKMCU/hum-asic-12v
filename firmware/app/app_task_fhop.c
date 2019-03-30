@@ -33,10 +33,10 @@
  * CONSTANTS
  **************************************************************************************************/
 #define FREQ_MAX        ((uint8_t)((int8_t)HAL_MCU_TRIM_MAX-(int8_t)HAL_MCU_TRIM_MIN)+1)
-#define FREQ_OFFSET     9
-#define SAMPLE_CNT_MAX  50
-#define FHOP_NO_WATER_HI_THRESHOLD      2500
-#define FHOP_NO_WATER_LO_THRESHOLD      1500
+#define FREQ_OFFSET     5
+#define SAMPLE_CNT_MAX  150
+#define FHOP_NO_WATER_HI_THRESHOLD      300
+#define FHOP_NO_WATER_LO_THRESHOLD      100
 #define FUZZY_SCALE     3
 /**************************************************************************************************
  * LOCAL FUNCTION DECLARATION
@@ -98,7 +98,7 @@ static void app_task_fhop_reset( void )
     app_task_fhop_init();
     hal_mcu_hsi_trim_set( HAL_MCU_TRIM_MIN );
     hal_mist_set_pwr( 3 );
-    hal_mist_on();
+    //hal_mist_on();
 }
 
 extern void app_task_fhop ( uint8_t task_id, uint8_t event_id )
@@ -155,13 +155,15 @@ static void app_task_fhop_handle_update( void )
                 trim = (int8_t)peak_idx + (int8_t)(HAL_MCU_TRIM_MIN) - (int8_t)FREQ_OFFSET;                
                 hal_mcu_hsi_trim_set( trim );
                 hal_mist_set_pwr( 5 );
-                hal_fan_on();
+                
                 app_info.sys_state = SYS_STATE_NORMAL_WORKING;
+                app_info.water_state = WATER_STATE_EXIST;
+                osal_event_set( TASK_ID_APP_MAIN, TASK_EVT_APP_MAIN_WATER_STATE_UPD );
             }
             else
             {
-                hal_mist_off();
-                app_info.sys_state = SYS_STATE_NO_WATER;
+                app_info.water_state = WATER_STATE_NONE;
+                osal_event_set( TASK_ID_APP_MAIN, TASK_EVT_APP_MAIN_WATER_STATE_UPD );
             }
         }
     }

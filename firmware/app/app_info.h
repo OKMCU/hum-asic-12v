@@ -24,8 +24,8 @@
 typedef struct app_info_t {
 
     uint16_t adc_value;
-
     uint8_t sys_state;
+    uint8_t water_state;
 } APP_INFO_t;
 /* ------------------------------------------------------------------------------------------------
  *                                           CONSTANTS
@@ -34,8 +34,10 @@ typedef struct app_info_t {
 
 #define SYS_STATE_SCAN_FREQ         0
 #define SYS_STATE_NORMAL_WORKING    1
-#define SYS_STATE_NO_WATER          2
 
+#define WATER_STATE_UNKNOWN         0
+#define WATER_STATE_NONE            1
+#define WATER_STATE_EXIST           2
 
 /* ------------------------------------------------------------------------------------------------
  *                                            MACROS

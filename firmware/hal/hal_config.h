@@ -30,7 +30,7 @@
 
 #define HAL_MIST_EN                      1
 #define HAL_ADC_EN                       1
-#define HAL_FAN_EN                       1
+#define HAL_FAN_EN                       0
 #define HAL_NOWATER_PIN_EN               1
 
 
