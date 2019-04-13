@@ -33,7 +33,7 @@
  * CONSTANTS
  **************************************************************************************************/
 #define FREQ_MAX        ((uint8_t)((int8_t)HAL_MCU_TRIM_MAX-(int8_t)HAL_MCU_TRIM_MIN)+1)
-#define FREQ_OFFSET     5
+#define FREQ_OFFSET     4
 #define SAMPLE_CNT_MAX  150
 #define FHOP_NO_WATER_HI_THRESHOLD      300
 #define FHOP_NO_WATER_LO_THRESHOLD      100
@@ -48,6 +48,7 @@ static void app_task_fhop_handle_update( void );
 static uint8_t sample_cnt;
 static uint32_t freq_index[FREQ_MAX];
 
+/*
 static uint8_t find_fuzzy_peak( const uint32_t *p_value, uint8_t len, uint32_t *p_fuzzy_peak )
 {
     uint8_t i;
@@ -80,6 +81,68 @@ static uint8_t find_fuzzy_peak( const uint32_t *p_value, uint8_t len, uint32_t *
     
     return peak_idx;
 }
+*/
+static uint8_t find_fuzzy_peak( const uint32_t *p_value, uint8_t len, uint32_t *p_fuzzy_peak )
+{
+    uint8_t i;
+    uint8_t peak_idx;
+    uint32_t peak_val;
+    uint32_t peak_fuzzy;
+
+    peak_val = 0;
+    peak_idx = 0;
+
+    if( len >= 3 )
+    {
+        for( i = 1; i < (len-1); i++ )
+        {
+            peak_fuzzy = 0;
+            peak_fuzzy += p_value[i-1];
+            peak_fuzzy += p_value[i];
+            peak_fuzzy += p_value[i+1];
+
+            if( peak_fuzzy >= peak_val )
+            {
+                peak_val = peak_fuzzy;
+                peak_idx = i;
+            }
+        }
+
+        if( p_value[peak_idx-1] >= p_value[peak_idx] && p_value[peak_idx] >= p_value[peak_idx+1] )
+        {
+            peak_idx = peak_idx-1;
+        }
+        else if( p_value[peak_idx-1] <= p_value[peak_idx] && p_value[peak_idx] <= p_value[peak_idx+1] )
+        {
+            peak_idx = peak_idx+1;
+        }
+        
+        if( p_fuzzy_peak )
+        {
+            *p_fuzzy_peak = peak_val/3;
+        }
+    }
+    else
+    {
+        for( i = 0; i < len; i++ )
+        {
+            
+            if( p_value[i] >= peak_val )
+            {
+                peak_val = p_value[i];
+                peak_idx = i;
+            }
+        }
+
+        if( p_fuzzy_peak )
+        {
+            *p_fuzzy_peak = peak_val;
+        }
+    }
+    
+    return peak_idx;
+}
+
 
 extern void app_task_fhop_init( void )
 {
@@ -154,7 +217,7 @@ static void app_task_fhop_handle_update( void )
             {
                 trim = (int8_t)peak_idx + (int8_t)(HAL_MCU_TRIM_MIN) - (int8_t)FREQ_OFFSET;                
                 hal_mcu_hsi_trim_set( trim );
-                hal_mist_set_pwr( 5 );
+                hal_mist_set_pwr( 4 );
                 
                 app_info.sys_state = SYS_STATE_NORMAL_WORKING;
                 app_info.water_state = WATER_STATE_EXIST;
