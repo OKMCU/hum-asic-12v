@@ -33,7 +33,7 @@
  * CONSTANTS
  **************************************************************************************************/
 #define FREQ_MAX        ((uint8_t)((int8_t)HAL_MCU_TRIM_MAX-(int8_t)HAL_MCU_TRIM_MIN)+1)
-#define FREQ_OFFSET     6
+#define FREQ_OFFSET     4
 #define SAMPLE_CNT_MAX  150
 #define FHOP_NO_WATER_HI_THRESHOLD      300
 #define FHOP_NO_WATER_LO_THRESHOLD      100
