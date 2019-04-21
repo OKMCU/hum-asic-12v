@@ -18,8 +18,8 @@
 #ifndef __APP_CONFIG_H__
 #define __APP_CONFIG_H__
 
-#define FIRMWARE_VER            "V1.0.0"
-#define HARDWARE_VER            "V1.0.0"
+#define FIRMWARE_VER            "V1.3.0"
+#define HARDWARE_VER            "V1.1.0"
 #define APP_ASSERT_EN                   1
 #define APP_CLI_EN                      0
 #define APP_CLI_CMD_TEST_EN             0
@@ -37,6 +37,8 @@
 #define WATER_INDEX_NO_WATER_HI_THRESHOLD    350
 #define WATER_INDEX_NO_WATER_LO_THRESHOLD    50
 #endif
+
+#define APP_POR_INIT_DELAY_MS           1000
 
 
 /**************************************************************************************************
