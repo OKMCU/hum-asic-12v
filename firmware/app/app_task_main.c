@@ -37,7 +37,8 @@
  **************************************************************************************************/
 extern void app_task_main_init( void )
 {
-    osal_event_set( TASK_ID_APP_MAIN, TASK_EVT_APP_MAIN_POR );
+    //osal_event_set( TASK_ID_APP_MAIN, TASK_EVT_APP_MAIN_POR );
+    osal_timer_event_create( TASK_ID_APP_MAIN, TASK_EVT_APP_MAIN_POR, APP_POR_INIT_DELAY_MS );
 }
 
 
