@@ -33,7 +33,7 @@
  * CONSTANTS
  **************************************************************************************************/
 #define FREQ_MAX        ((uint8_t)((int8_t)HAL_MCU_TRIM_MAX-(int8_t)HAL_MCU_TRIM_MIN)+1)
-#define FREQ_OFFSET     4
+#define FREQ_OFFSET     0
 #define SAMPLE_CNT_MAX  150
 #define FHOP_NO_WATER_HI_THRESHOLD      300
 #define FHOP_NO_WATER_LO_THRESHOLD      100
@@ -217,7 +217,7 @@ static void app_task_fhop_handle_update( void )
             {
                 trim = (int8_t)peak_idx + (int8_t)(HAL_MCU_TRIM_MIN) - (int8_t)FREQ_OFFSET;                
                 hal_mcu_hsi_trim_set( trim );
-                hal_mist_set_pwr( 4 );
+                //hal_mist_set_pwr( 4 );                    // 31 Aug 2019: Tuned to ~500mA normal working current, do not need to increase power from 3 to 4
                 
                 app_info.sys_state = SYS_STATE_NORMAL_WORKING;
                 app_info.water_state = WATER_STATE_EXIST;
