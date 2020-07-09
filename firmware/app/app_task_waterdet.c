@@ -75,8 +75,8 @@ extern void app_task_waterdet ( uint8_t task_id, uint8_t event_id )
                 if( water_index_iir < iir_min )
                     iir_min = water_index_iir;
                 
-                if( water_index_iir < WATER_INDEX_NO_WATER_LO_THRESHOLD
-                  ||water_index_iir > WATER_INDEX_NO_WATER_HI_THRESHOLD )                          //if water_index_iir is too small, no water
+                if( //water_index_iir < WATER_INDEX_NO_WATER_LO_THRESHOLD ||
+                    water_index_iir > WATER_INDEX_NO_WATER_HI_THRESHOLD )                          //if water_index_iir is too small, no water
                 {
                     app_info.water_state = WATER_STATE_NONE;
                     osal_event_set( TASK_ID_APP_MAIN, TASK_EVT_APP_MAIN_WATER_STATE_UPD );
